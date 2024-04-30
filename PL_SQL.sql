@@ -82,6 +82,10 @@ BEGIN
 END;
 /
 
+select * from Book;
+select * from Student;
+select * from Operation;
+
 --trigger for inserting book table
 -- Create the trigger to update no_of_books when a new book is added
 CREATE OR REPLACE TRIGGER increase_no_of_books
