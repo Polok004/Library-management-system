@@ -81,3 +81,29 @@ BEGIN
   END IF;   
 END;
 /
+
+--trigger for inserting book table
+-- Create the trigger to update no_of_books when a new book is added
+CREATE OR REPLACE TRIGGER increase_no_of_books
+AFTER INSERT ON Book
+FOR EACH ROW
+BEGIN
+  -- Increment no_of_books for the corresponding author
+  UPDATE Author
+  SET no_of_books = no_of_books + 1
+  WHERE author_id = :NEW.author_id;
+
+  -- Increment no_of_books for the corresponding book_type
+  UPDATE book_type
+  SET no_of_books = no_of_books + 1
+  WHERE type_id = :NEW.type_id;
+END;
+/
+
+insert into Book(book_code,book_name,author_id,type_id,book_description,status) values(7,'GOT',3,3,'This book is GOT','available');
+select * from Book;
+select * from Author;
+select * from book_type;
+
+--trigger for deleting a book row
+
