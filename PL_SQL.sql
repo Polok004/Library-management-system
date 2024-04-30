@@ -107,3 +107,24 @@ select * from book_type;
 
 --trigger for deleting a book row
 
+CREATE OR REPLACE TRIGGER decrease_no_of_books
+AFTER DELETE ON Book
+FOR EACH ROW
+BEGIN
+  -- Decrement no_of_books for the corresponding author
+  UPDATE Author
+  SET no_of_books = no_of_books - 1
+  WHERE author_id = :OLD.author_id;
+
+  -- Decrement no_of_books for the corresponding book_type
+  UPDATE book_type
+  SET no_of_books = no_of_books - 1
+  WHERE type_id = :OLD.type_id;
+END;
+/
+delete from book where book_code=7;
+select * from book;
+select * from author;
+select * from book_type;
+
+
