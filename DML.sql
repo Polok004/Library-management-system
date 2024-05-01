@@ -18,9 +18,9 @@ insert into Stuff(stuff_id,stuff_name,stuff_email,stuff_phone) values(3,'Avijit'
 insert into Book(book_code,book_name,author_id,type_id,book_description,status) values(1,'Database Management',2,1,'This book is for CSE students','available');
 insert into Book(book_code,book_name,author_id,type_id,book_description,status) values(2,'Web development',1,1,'This book is for CSE students','rented');
 insert into Book(book_code,book_name,author_id,type_id,book_description,status) values(3,'Statistics and Probability',4,3,'This book is for Math students','available');
-insert into Book(book_code,book_name,author_id,type_id,book_description,status) values(4,'Furier Series',3,3,'This book is for Math students','available');
+insert into Book(book_code,book_name,author_id,type_id,book_description,status) values(4,'Furier Series',3,3,'This book is for Math students','rented');
 insert into Book(book_code,book_name,author_id,type_id,book_description,status) values(5,'Natural Resourse',3,2,'This book is for Matarial students','rented');
-insert into Book(book_code,book_name,author_id,type_id,book_description,status) values(6,'Naruto',4,4,'This book is fictional','rented');
+insert into Book(book_code,book_name,author_id,type_id,book_description,status) values(6,'Naruto',4,4,'This book is fictional','available');
 
 
 insert into Student(student_id,student_name,student_email,student_phone,total_rented_books) values(1,'Arnob Sarkar','sarkar420@gmail.com','01927834346',0);
