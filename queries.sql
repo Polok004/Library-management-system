@@ -83,29 +83,34 @@ select * from Author where author_id=(select author_id from Book where book_code
 --example of book types of a particular author
 select type_name from book_type where type_id IN (select type_id from Book where author_id=3);
 
---
-select * from Student where student_id=(select student_id from Operation where book_code IN (select book_code from Book where type_id=4));
+--details of a student who rents a particular book
+select * from Student where student_id=(select student_id from Operation where SL_no=1);
 
---membership
-select * from book where book_code> some(select book_code from book where book_code>=2);
-select * from operation where total_days >31 AND end_date > '01-JAN-2024';
+--finding details of rented books using some condition
+select * from operation where total_days >31 OR end_date > '01-JAN-2024';
 
---string operation
-SELECT * FROM Book WHERE Book_name LIKE '%N%';
-SELECT * FROM Book WHERE Book_name LIKE '______' or Book_name LIKE '______________' or Book_name LIKE '___________________';
+--finding books
+select * from Book where Book_name like '%N%';
+select * from Book where Book_name like '______' or Book_name like '______________' or Book_name like '___________________';
 
---join operation
+--natural join of the books and rented books
 select * from operation natural join book;
+
+--stuff who rented books
 select stuff_name,stuff_phone from stuff left outer join operation on operation.issued_by=Stuff.stuff_id;
+
+--student and their rented book numbers
 select student_name,total_rented_books from student right outer join operation using(student_id);
+
+--author's book details
 select book_name,book_description,status from book full outer join author using(author_id);
 
---views
 
+--views for rented book details
 create view rent as select * from book where status='rented';
 select * from rent;
 
-
+--views for available book details
 create view available as select * from book where status='available';
 select * from available;
 
