@@ -1,5 +1,5 @@
 
-
+--show tables
 select * from Author;
 select * from book_type;
 select * from Stuff;
@@ -8,16 +8,27 @@ select * from Student;
 select * from Operation;
 
 
---column add,rename,typechange,drop
+--new column add
 alter table Author add Prefered_type char(20);
+select * from Author;
+
+--modify column type
 alter table Author modify Prefered_type varchar(23);
+select * from Author;
+
+--renamin column
 alter table Author rename column Prefered_type to Prefered_typeName;
+select * from Author;
+
+--drop a column
 alter table Author drop column Prefered_typeName;
+select * from Author;
 
 
 --update rent time
 update Operation set end_date='23-DEC-2023' where SL_no=1;
 update Operation set total_days=50 where SL_no=1;
+select * from Operation;
 
 --deleting a row which holds the rent details when returns the book
 update Book set status='available' where book_code=(select book_code from Operation where SL_no=2);
