@@ -35,8 +35,11 @@ update Book set status='available' where book_code=(select book_code from Operat
 update Student set total_rented_books = total_rented_books - 1
 where student_id = (select student_id from Operation where SL_no = 2);
 delete from Operation where SL_no=2;
+select * from Book;
+select * from Student;
+select * from Operation;
 
---aggregate functions
+--aggregate functions of the tables
 select count(*) from Book;
 select count(*) from Operation;
 select count(*) from book_type;
@@ -44,32 +47,43 @@ select count(*) from Student;
 select count(*) from Stuff;
 select count(*) from Author;
 
-
+--avg and total days of renting books
 select avg(total_days) from Operation;
 select sum(total_days) from Operation;
 
+--student max and min book renting
 select max(total_rented_books) from Student;
 select min(total_rented_books) from Student;
 
 
---uion,intersect and except
+--names of the students whoose name start with 'A' or end with 'r'
 select student_name from student where student_name like 'A%' union select student_name from student where student_name like '%r';
+
+----names of the students whoose name start with 'A' and end with 'r'
 select student_name from student where student_name like 'A%' intersect select student_name from student where student_name like '%r';
 
---with clause
+--the information about the author who have most number of the books
 with max_books(val) as (select max(no_of_books) from Author)
 select * from Author,max_books where Author.no_of_books=max_books.val;
 
---group by and having
 
+-- information about the students who rented books
 select student_name,avg(total_rented_books) from student group by student_name having avg(total_rented_books)>0;
+
+-- information about the book types who have more than one book
 select type_name,avg(no_of_books) from book_type group by type_name having avg(no_of_books)>1;
+
+-- information about the authors who have more than one book
 select author_name,avg(no_of_books) from Author group by author_name having avg(no_of_books)>1;
 
---subquery
 
+--example of author details from rented books
 select * from Author where author_id=(select author_id from Book where book_code=(select book_code from Operation where SL_no=1));
+
+--example of book types of a particular author
 select type_name from book_type where type_id IN (select type_id from Book where author_id=3);
+
+--
 select * from Student where student_id=(select student_id from Operation where book_code IN (select book_code from Book where type_id=4));
 
 --membership
