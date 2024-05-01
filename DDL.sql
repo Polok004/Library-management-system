@@ -1,7 +1,7 @@
 CREATE TABLE book_type (
   type_id number(20),
   type_name varchar2(50),
-  no_of_books integer,
+  no_of_books integer CHECK (no_of_books >= 0),
   primary key(type_id)
 );
 
@@ -11,7 +11,7 @@ CREATE TABLE Author (
   author_id number(20),
   author_name varchar2(50),
   author_email varchar2(50),
-  no_of_books integer,
+  no_of_books integer CHECK (no_of_books >= 0),
   primary key(author_id)
 );
 
@@ -42,7 +42,7 @@ CREATE TABLE Student (
  student_name varchar2(50),
  student_email varchar2(50),
  student_phone varchar2(50),
- total_rented_books integer,
+ total_rented_books integer CHECK (total_rented_books >= 0),
  primary key(student_id)
 );
 
