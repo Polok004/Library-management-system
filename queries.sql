@@ -1,3 +1,11 @@
+--drop tables
+drop table Operation;
+drop table Book;
+drop table Author;
+drop table book_type;
+drop table Stuff;
+drop table Student;
+
 
 --show tables
 select * from Author;
