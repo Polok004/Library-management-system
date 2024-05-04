@@ -1,4 +1,4 @@
---insertion a new student
+--insertion of a new student
 set serveroutput on
 declare 
 student_id Student.student_id%type:=9;
@@ -12,6 +12,81 @@ end;
 /
 select * from student;
 
+--all the details of operation table using cursor and rowtype
+set serveroutput on;
+
+declare
+  cursor operation_cursor is
+    select * from operation;
+  operation_row operation%rowtype;
+begin
+  open operation_cursor;
+  fetch operation_cursor into operation_row.sl_no, operation_row.book_code, operation_row.student_id, operation_row.start_date, operation_row.end_date, operation_row.total_days, operation_row.issued_by;
+  
+  while operation_cursor%found loop
+    dbms_output.put_line('SL No: ' || operation_row.sl_no || ' Book Code: ' || operation_row.book_code || ' Student Id: ' || operation_row.student_id || ' Start Date: ' || operation_row.start_date || ' End Date: ' || operation_row.end_date || ' Renting Days: ' || operation_row.total_days || ' Stuff ID: ' || operation_row.issued_by);
+
+    fetch operation_cursor into operation_row.sl_no, operation_row.book_code, operation_row.student_id, operation_row.start_date, operation_row.end_date, operation_row.total_days, operation_row.issued_by;
+  end loop;
+  
+  close operation_cursor;
+end;
+/
+
+
+--finding book details of a particular student using array and loop
+
+set serveroutput on;
+
+declare 
+  v_student_id student.student_id%type := 3; -- Student ID to search for
+  type bookcodearray is varray(5) of operation.book_code%type;
+  type booknamearray is varray(5) of book.book_name%type;
+  type startdatearray is varray(5) of operation.start_date%type;
+  type enddatearray is varray(5) of operation.end_date%type;
+  type totaldaysarray is varray(5) of operation.total_days%type;
+  v_book_codes bookcodearray := bookcodearray();
+  v_book_names booknamearray := booknamearray();
+  v_start_dates startdatearray := startdatearray();
+  v_end_dates enddatearray := enddatearray();
+  v_total_days totaldaysarray := totaldaysarray();
+  v_books_rented boolean := false; -- Flag to track if books are rented
+begin
+  -- Retrieve book codes, names, start dates, end dates, and total days rented by the specified student
+  for op in (select o.book_code, b.book_name, o.start_date, o.end_date, o.total_days
+              from operation o
+              join book b on o.book_code = b.book_code
+              where o.student_id = v_student_id) 
+  loop
+    -- Store book code, name, start date, end date, and total days in the arrays
+    v_book_codes.extend;
+    v_book_codes(v_book_codes.count) := op.book_code;
+    v_book_names.extend;
+    v_book_names(v_book_names.count) := op.book_name;
+    v_start_dates.extend;
+    v_start_dates(v_start_dates.count) := op.start_date;
+    v_end_dates.extend;
+    v_end_dates(v_end_dates.count) := op.end_date;
+    v_total_days.extend;
+    v_total_days(v_total_days.count) := op.total_days;
+    v_books_rented := true; -- Set flag to indicate books are rented
+  end loop;
+
+  -- Output the rented book details or a message if no books are rented
+  if v_books_rented then
+    dbms_output.put_line('Books rented by student with ID ' || v_student_id || ':');
+    for i in 1 .. v_book_codes.count loop
+      dbms_output.put_line('Book Code: ' || v_book_codes(i) || ', Book Name: ' || v_book_names(i) || ', Start Date: ' || v_start_dates(i) || ', End Date: ' || v_end_dates(i) || ', Total Days: ' || v_total_days(i));
+    end loop;
+  else
+    dbms_output.put_line('Student with ID ' || v_student_id || ' has not rented any books.');
+  end if;
+end;
+/
+
+ 
+
+  
 
 --trigger for counting total days
 CREATE OR REPLACE TRIGGER calculate_total_days
