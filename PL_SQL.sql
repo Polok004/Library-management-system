@@ -113,9 +113,6 @@ AS
 BEGIN
   update book set status = 'rented' where book_code = p_book_code;
   dbms_output.put_line('Book status updated successfully.');
-EXCEPTION
-  WHEN OTHERS THEN
-    dbms_output.put_line('Error updating book: ' || SQLERRM);
 END;
 /
 
