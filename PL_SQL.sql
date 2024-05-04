@@ -40,11 +40,11 @@ set serveroutput on;
 
 declare 
   v_student_id student.student_id%type := 3; -- Student ID to search for
-  type bookcodearray is varray(5) of operation.book_code%type;
-  type booknamearray is varray(5) of book.book_name%type;
-  type startdatearray is varray(5) of operation.start_date%type;
-  type enddatearray is varray(5) of operation.end_date%type;
-  type totaldaysarray is varray(5) of operation.total_days%type;
+  type bookcodearray is varray(500) of operation.book_code%type;
+  type booknamearray is varray(500) of book.book_name%type;
+  type startdatearray is varray(500) of operation.start_date%type;
+  type enddatearray is varray(500) of operation.end_date%type;
+  type totaldaysarray is varray(500) of operation.total_days%type;
   v_book_codes bookcodearray := bookcodearray();
   v_book_names booknamearray := booknamearray();
   v_start_dates startdatearray := startdatearray();
