@@ -93,6 +93,8 @@ BEGIN
   :NEW.total_days := TRUNC(:NEW.end_date) - TRUNC(:NEW.start_date);
 END;
 /
+
+  
 insert into Operation (SL_no, book_code, student_id, start_date, end_date, issued_by) values (4,1 , 1,'03-NOV-2023','03-DEC-2023', 2);
 update book set status='rented' where book_code=1;
 update student set total_rented_books=total_rented_books+1 where student_id=1;
