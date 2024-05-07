@@ -52,13 +52,10 @@ declare
   v_total_days totaldaysarray := totaldaysarray();
   v_books_rented boolean := false; -- Flag to track if books are rented
 begin
-  -- Retrieve book codes, names, start dates, end dates, and total days rented by the specified student
-  for op in (select o.book_code, b.book_name, o.start_date, o.end_date, o.total_days
-              from operation o
-              join book b on o.book_code = b.book_code
-              where o.student_id = v_student_id) 
+  
+  for op in (select o.book_code, b.book_name, o.start_date, o.end_date, o.total_days from operation o join book b on o.book_code = b.book_code where o.student_id = v_student_id) 
   loop
-    -- Store book code, name, start date, end date, and total days in the arrays
+ 
     v_book_codes.extend;
     v_book_codes(v_book_codes.count) := op.book_code;
     v_book_names.extend;
@@ -69,10 +66,10 @@ begin
     v_end_dates(v_end_dates.count) := op.end_date;
     v_total_days.extend;
     v_total_days(v_total_days.count) := op.total_days;
-    v_books_rented := true; -- Set flag to indicate books are rented
+    v_books_rented := true; 
   end loop;
 
-  -- Output the rented book details or a message if no books are rented
+ 
   if v_books_rented then
     dbms_output.put_line('Books rented by student with ID ' || v_student_id || ':');
     for i in 1 .. v_book_codes.count loop
@@ -139,32 +136,19 @@ DECLARE
   v_end_day Operation.end_date%TYPE:='26-FEB-2024';
   v_stuff Operation.issued_by%TYPE:= 3;
 BEGIN
-  -- Get the maximum SL_no value from the Operation table
+
   select MAX(sl_no) into v_max_sl_no from Operation;
-  
-  -- Increment the maximum SL_no value by 1 to get the current SL_no value
   v_max_sl_no := v_max_sl_no + 1;
-  
-  -- Fetching status of the book
   select status into v_status from Book where book_code = v_book_code;
     
   IF v_status = 'rented' THEN
     dbms_output.put_line('This book is not available right now');
   ELSE 
-    -- Inserting into Operation table with the current SL_no value
     insert into Operation(SL_no, book_code, student_id, start_date, end_date, issued_by) 
     values (v_max_sl_no, v_book_code, v_student_id, v_start_day, v_end_day, v_stuff);
-    
-    -- Updating the book status
     updateBook(v_book_code);
-    
-    -- Incrementing the total rented books for the student
     v_total_books := incrementRentedBooks(v_student_id);
-    
-    -- Updating the total rented books for the student
     update Student set total_rented_books = v_total_books where student_id = v_student_id;
-    
-   
   END IF;   
 END;
 /
@@ -173,16 +157,12 @@ select * from Student;
 select * from Operation;
 
 
---trigger for inserting book table
--- Create the trigger to update no_of_books when a new book is added
+--trigger for inserting book row
 CREATE OR REPLACE TRIGGER increase_no_of_books
 AFTER INSERT ON Book
 FOR EACH ROW
 BEGIN
-  -- Increment no_of_books for the corresponding author
   UPDATE Author SET no_of_books = no_of_books + 1 WHERE author_id = :NEW.author_id;
-
-  -- Increment no_of_books for the corresponding book_type
   UPDATE book_type SET no_of_books = no_of_books + 1 WHERE type_id = :NEW.type_id;
 END;
 /
@@ -198,10 +178,7 @@ CREATE OR REPLACE TRIGGER decrease_no_of_books
 AFTER DELETE ON Book
 FOR EACH ROW
 BEGIN
-  -- Decrement no_of_books for the corresponding author
   UPDATE Author SET no_of_books = no_of_books - 1 WHERE author_id = :OLD.author_id;
-
-  -- Decrement no_of_books for the corresponding book_type
   UPDATE book_type SET no_of_books = no_of_books - 1 WHERE type_id = :OLD.type_id;
 END;
 /
